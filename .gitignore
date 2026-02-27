@@ -1,0 +1,39 @@
+# Data (too large for git)
+/data/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Claude
+.claude/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Model checkpoints and outputs
+/checkpoints/
+/outputs/
+/runs/
+*.pth
+*.pt
+
+# Logs
+*.log
