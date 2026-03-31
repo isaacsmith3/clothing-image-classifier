@@ -33,16 +33,17 @@ BACKBONE_NAME = "efficientnet_b2"
 PRETRAINED = True
 
 # Data
-BATCH_SIZE = 32
+BATCH_SIZE = 48
+IMAGE_SIZE = 224            # smaller for faster batches
 
 # Optimization
-HEAD_LR = 1e-3
-BACKBONE_LR = 1e-4
+HEAD_LR = 2e-3
+BACKBONE_LR = 3e-4
 WEIGHT_DECAY = 1e-4
 LABEL_SMOOTHING = 0.1
 
 # Training strategy
-UNFREEZE_AT_EPOCH = 2       # unfreeze backbone at this epoch
+UNFREEZE_AT_EPOCH = 1       # unfreeze backbone immediately
 MIXUP_ALPHA = 0.2           # set to 0 to disable mixup
 
 # Multi-task loss weights
@@ -132,7 +133,7 @@ print(f"Device: {device}")
 print(f"Time budget: {TIME_BUDGET}s")
 
 # Data
-train_loader, _ = make_dataloaders(BATCH_SIZE, IMG_SIZE)
+train_loader, _ = make_dataloaders(BATCH_SIZE, IMAGE_SIZE)
 print(f"Train batches: {len(train_loader)}")
 
 # Model
@@ -141,32 +142,31 @@ model = ClothingModel(BACKBONE_NAME, PRETRAINED).to(device)
 total_params = sum(p.numel() for p in model.parameters())
 print(f"Total parameters: {total_params:,}")
 
-# Freeze backbone initially
-for param in model.backbone.parameters():
-    param.requires_grad = False
-
-trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
-print(f"Trainable parameters (heads only): {trainable:,}")
-
 # Loss functions
 condition_criterion = nn.CrossEntropyLoss(label_smoothing=LABEL_SMOOTHING)
 fraud_criterion = nn.BCEWithLogitsLoss()
 
-# Optimizer (heads only initially)
-head_params = [p for n, p in model.named_parameters() if "backbone" not in n]
-optimizer = torch.optim.AdamW(head_params, lr=HEAD_LR, weight_decay=WEIGHT_DECAY)
+# Freeze backbone initially (if UNFREEZE_AT_EPOCH > 1)
+if UNFREEZE_AT_EPOCH > 1:
+    for param in model.backbone.parameters():
+        param.requires_grad = False
+    head_params = [p for n, p in model.named_parameters() if "backbone" not in n]
+    optimizer = torch.optim.AdamW(head_params, lr=HEAD_LR, weight_decay=WEIGHT_DECAY)
+    trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"Trainable parameters (heads only): {trainable:,}")
+else:
+    # All params trainable from start
+    optimizer = torch.optim.AdamW([
+        {"params": [p for n, p in model.named_parameters() if "backbone" not in n], "lr": HEAD_LR},
+        {"params": list(model.backbone.parameters()), "lr": BACKBONE_LR},
+    ], weight_decay=WEIGHT_DECAY)
+    print(f"All parameters trainable from start: {total_params:,}")
 
-# Scheduler
+# Scheduler — use CosineAnnealingLR (robust to param group changes)
 steps_per_epoch = len(train_loader)
-# Estimate total epochs in budget (rough, will be refined by wall clock)
-estimated_epochs = max(5, 15)
-scheduler = torch.optim.lr_scheduler.OneCycleLR(
-    optimizer,
-    max_lr=HEAD_LR,
-    epochs=estimated_epochs,
-    steps_per_epoch=steps_per_epoch,
-    pct_start=0.1,
-    anneal_strategy="cos",
+estimated_total_steps = steps_per_epoch * 5  # rough estimate
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+    optimizer, T_max=estimated_total_steps, eta_min=1e-6
 )
 
 # ---------------------------------------------------------------------------
@@ -174,14 +174,18 @@ scheduler = torch.optim.lr_scheduler.OneCycleLR(
 # ---------------------------------------------------------------------------
 
 def unfreeze_backbone():
-    """Unfreeze backbone and add its params to optimizer with lower LR."""
+    """Unfreeze backbone and rebuild optimizer + scheduler."""
+    global optimizer, scheduler
     for param in model.backbone.parameters():
         param.requires_grad = True
-    optimizer.add_param_group({
-        "params": list(model.backbone.parameters()),
-        "lr": BACKBONE_LR,
-        "weight_decay": WEIGHT_DECAY,
-    })
+    optimizer = torch.optim.AdamW([
+        {"params": [p for n, p in model.named_parameters() if "backbone" not in n], "lr": HEAD_LR * 0.5},
+        {"params": list(model.backbone.parameters()), "lr": BACKBONE_LR},
+    ], weight_decay=WEIGHT_DECAY)
+    remaining_steps = max(100, estimated_total_steps - step)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+        optimizer, T_max=remaining_steps, eta_min=1e-6
+    )
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"  Backbone unfrozen — trainable params: {trainable:,}")
 
