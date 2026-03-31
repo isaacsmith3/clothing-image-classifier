@@ -21,3 +21,8 @@ dev/
 
 # Results file
 results.tsv
+
+# Training logs and checkpoints
+run.log
+*.pt
+*.pth
