@@ -7,3 +7,5 @@
 | 2026-03-01 | 2     | Data cleaning and additional data exploration
 | 2026-03-11 | 2     | Research and discussing with ecommerce experts
 | 2026-03-27 | 4     | Implementing the model
+| 2026-03-30 | 3     | Set up autoresearch and allow it to start running
+| 2026-03-31 | 1     | Analyze autoresearch results and make pull request
