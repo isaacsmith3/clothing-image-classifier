@@ -22,7 +22,7 @@ from sklearn.model_selection import train_test_split # type: ignore
 SCRIPT_DIR   = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
 RAW_DATA_DIR = PROJECT_ROOT / "data" / "clothing_v3"
-OUTPUT_CSV   = PROJECT_ROOT / "data" / "cleaned_metadata.csv"
+OUTPUT_CSV   = PROJECT_ROOT / "data" / "cleaned_metadata_v2.csv"
 
 # ── Normalisation maps ─────────────────────────────────────────────────────────
 DEFECT_MAP: dict[str, int] = {
@@ -44,6 +44,19 @@ USAGE_BUCKET: dict[str, str] = {
 }
 
 STATION_RE = re.compile(r"(station\d+)", re.IGNORECASE)
+
+# ── Category / Type mappings (from labels.py) ─────────────────────────────────
+CATEGORY_LIST = ['Ladies', 'Men', 'Children', 'Unisex']
+CATEGORY_MAP = {v.strip().lower(): i for i, v in enumerate(CATEGORY_LIST)}
+
+TYPE_LIST = [
+    'Blazer', 'Blouse', 'Cardigan', 'Denim jacket', 'Dress', 'Hoodie',
+    'Jacket', 'Jeans', 'Night gown', 'Outerwear', 'Pajamas', 'Rain jacket',
+    'Rain trousers', 'Robe', 'Shirt', 'Shorts', 'Skirt', 'Sweater',
+    'T-shirt', 'Tank top', 'Tights', 'Top', 'Training top', 'Trousers',
+    'Tunic', 'Vest', 'Winter jacket', 'Winter trousers',
+]
+TYPE_MAP = {v.strip().lower(): i for i, v in enumerate(TYPE_LIST)}
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
@@ -87,6 +100,13 @@ def parse_label(json_path: Path) -> dict | None:
     smell  = normalise_defect(raw.get("smell",  "none"))
     usage  = normalise_usage(raw.get("usage", ""))
 
+    # Category and type as integer codes (-1 = unknown)
+    raw_cat = str(raw.get("category", "")).strip().lower()
+    category = CATEGORY_MAP.get(raw_cat, -1)
+
+    raw_type = str(raw.get("type", "")).strip().lower()
+    clothing_type = TYPE_MAP.get(raw_type, -1)
+
     timestamp = json_path.stem.replace("labels_", "")
 
     return {
@@ -101,6 +121,8 @@ def parse_label(json_path: Path) -> dict | None:
         "smell":      smell,
         "usage":      usage,
         "material":   raw.get("material", ""),
+        "category":   category,
+        "clothing_type": clothing_type,
     }
 
 
