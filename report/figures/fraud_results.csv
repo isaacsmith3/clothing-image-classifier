@@ -1,0 +1,6 @@
+Method,Precision,Recall,F1,Flagged,True Fraud Caught
+Heuristic Rules,0.2255,1.0000,0.3680,102,23
+IsolationForest,0.0000,0.0000,0.0000,19,0
+CLIP Discrepancy,0.0025,0.1739,0.0049,1619,4
+Ensemble (2/3 vote),0.1481,0.1739,0.1600,27,4
+Union (any method),0.0134,1.0000,0.0265,1713,23
