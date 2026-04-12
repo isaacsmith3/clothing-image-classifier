@@ -30,10 +30,16 @@ env/
 
 # Model checkpoints and outputs
 /checkpoints/
+/checkpoints_v2/
+/checkpoints_regression/
+/checkpoints_auditor/
 /outputs/
 /runs/
 *.pth
 *.pt
+
+# mypy
+.mypy_cache/
 
 # Logs
 *.log

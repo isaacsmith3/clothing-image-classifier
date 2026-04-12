@@ -1,0 +1,203 @@
+{
+  "fraud_ground_truth": 23,
+  "heuristic": {
+    "precision": 0.22549019607843138,
+    "recall": 1.0,
+    "f1": 0.368,
+    "flagged": 102
+  },
+  "s3_raw": {
+    "roc_auc": 0.7301410567300796,
+    "pr_auc": 0.008833194149794695,
+    "best_f1_threshold": 2.2,
+    "best_f1_precision": 0.05,
+    "best_f1_recall": 0.043478260869565216,
+    "best_f1": 0.046511627906976744,
+    "best_f1_flagged": 20,
+    "precision_at_k": {
+      "23": {
+        "precision": 0.043478260869565216,
+        "recall": 0.043478260869565216,
+        "caught": 1
+      },
+      "50": {
+        "precision": 0.02,
+        "recall": 0.043478260869565216,
+        "caught": 1
+      },
+      "100": {
+        "precision": 0.01,
+        "recall": 0.043478260869565216,
+        "caught": 1
+      },
+      "200": {
+        "precision": 0.005,
+        "recall": 0.043478260869565216,
+        "caught": 1
+      },
+      "500": {
+        "precision": 0.006,
+        "recall": 0.13043478260869565,
+        "caught": 3
+      }
+    }
+  },
+  "s3_calibrated": {
+    "roc_auc": 0.7438983571843301,
+    "pr_auc": 0.009182780363885604,
+    "best_f1_threshold": 2.55,
+    "best_f1_precision": 0.045454545454545456,
+    "best_f1_recall": 0.043478260869565216,
+    "best_f1": 0.044444444444444446,
+    "best_f1_flagged": 22,
+    "precision_at_k": {
+      "23": {
+        "precision": 0.043478260869565216,
+        "recall": 0.043478260869565216,
+        "caught": 1
+      },
+      "50": {
+        "precision": 0.02,
+        "recall": 0.043478260869565216,
+        "caught": 1
+      },
+      "100": {
+        "precision": 0.01,
+        "recall": 0.043478260869565216,
+        "caught": 1
+      },
+      "200": {
+        "precision": 0.005,
+        "recall": 0.043478260869565216,
+        "caught": 1
+      },
+      "500": {
+        "precision": 0.006,
+        "recall": 0.13043478260869565,
+        "caught": 3
+      }
+    }
+  },
+  "s3_raw_rerank_heuristic": {
+    "roc_auc": 0.5553109521188773,
+    "pr_auc": 0.29066763995929057,
+    "base_rate": 0.22549019607843138,
+    "precision_at_k": {
+      "23": {
+        "precision": 0.34782608695652173,
+        "recall": 0.34782608695652173,
+        "caught": 8
+      },
+      "50": {
+        "precision": 0.24,
+        "recall": 0.5217391304347826,
+        "caught": 12
+      },
+      "100": {
+        "precision": 0.22,
+        "recall": 0.9565217391304348,
+        "caught": 22
+      },
+      "200": {
+        "precision": 0.115,
+        "recall": 1.0,
+        "caught": 23
+      },
+      "500": {
+        "precision": 0.046,
+        "recall": 1.0,
+        "caught": 23
+      }
+    }
+  },
+  "s3_calibrated_rerank_heuristic": {
+    "roc_auc": 0.7105118326912493,
+    "pr_auc": 0.38616950974915487,
+    "base_rate": 0.22549019607843138,
+    "precision_at_k": {
+      "23": {
+        "precision": 0.43478260869565216,
+        "recall": 0.43478260869565216,
+        "caught": 10
+      },
+      "50": {
+        "precision": 0.36,
+        "recall": 0.782608695652174,
+        "caught": 18
+      },
+      "100": {
+        "precision": 0.23,
+        "recall": 1.0,
+        "caught": 23
+      },
+      "200": {
+        "precision": 0.115,
+        "recall": 1.0,
+        "caught": 23
+      },
+      "500": {
+        "precision": 0.046,
+        "recall": 1.0,
+        "caught": 23
+      }
+    }
+  },
+  "v2": {
+    "roc_auc": 0.6785,
+    "pr_auc": 0.0106,
+    "best_f1_threshold": 2.45,
+    "best_f1_precision": 0.1111,
+    "best_f1_recall": 0.0435,
+    "best_f1": 0.0625,
+    "best_f1_flagged": 9,
+    "precision_at_k": {
+      "23": {
+        "precision": 0.043,
+        "recall": 0.043,
+        "caught": 1
+      },
+      "50": {
+        "precision": 0.02,
+        "recall": 0.043,
+        "caught": 1
+      },
+      "100": {
+        "precision": 0.01,
+        "recall": 0.043,
+        "caught": 1
+      },
+      "200": {
+        "precision": 0.005,
+        "recall": 0.043,
+        "caught": 1
+      },
+      "500": {
+        "precision": 0.006,
+        "recall": 0.13,
+        "caught": 3
+      }
+    }
+  },
+  "v2_rerank_heuristic": {
+    "roc_auc": 0.4579,
+    "pr_auc": 0.2734,
+    "base_rate": 0.22549019607843138,
+    "precision_at_k": {
+      "23": {
+        "precision": 0.217,
+        "recall": 0.217,
+        "caught": 5
+      },
+      "50": {
+        "precision": 0.24,
+        "recall": 0.522,
+        "caught": 12
+      },
+      "100": {
+        "precision": 0.23,
+        "recall": 1.0,
+        "caught": 23
+      }
+    }
+  }
+}

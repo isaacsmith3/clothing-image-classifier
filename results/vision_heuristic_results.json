@@ -1,0 +1,75 @@
+{
+  "v2_stains_accuracy": 0.6026708562450903,
+  "v2_stains_confusion": [
+    [
+      3167,
+      792,
+      914
+    ],
+    [
+      299,
+      312,
+      336
+    ],
+    [
+      103,
+      85,
+      357
+    ]
+  ],
+  "v2_holes_accuracy": 0.6864100549882168,
+  "v2_holes_confusion": [
+    [
+      4239,
+      1175,
+      637
+    ],
+    [
+      83,
+      73,
+      36
+    ],
+    [
+      37,
+      28,
+      57
+    ]
+  ],
+  "baseline_heuristic": {
+    "precision": 0.22549019607843138,
+    "recall": 1.0,
+    "f1": 0.368,
+    "flagged": 102
+  },
+  "vision_heuristic": {
+    "precision": 0.008490566037735849,
+    "recall": 0.391304347826087,
+    "f1": 0.01662049861495845,
+    "flagged": 1060,
+    "fraud_caught": 9
+  },
+  "combined_heuristic": {
+    "precision": 0.02110091743119266,
+    "recall": 1.0,
+    "f1": 0.04132973944294699,
+    "flagged": 1090
+  },
+  "continuous_vision_score": {
+    "roc_auc": 0.8568257112606305,
+    "pr_auc": 0.027252477566753395
+  },
+  "vision_score_topk": {
+    "23": {
+      "caught": 1,
+      "precision": 0.043478260869565216
+    },
+    "50": {
+      "caught": 4,
+      "precision": 0.08
+    },
+    "100": {
+      "caught": 4,
+      "precision": 0.04
+    }
+  }
+}
